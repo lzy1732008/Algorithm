@@ -495,7 +495,7 @@ class Solution:
             array1 = array2
             array2 = []
             if len(items) > 0:
-               path.append(items)
+                path.append(items)
         return path
 
     # 题目:把二叉树打印成多行
@@ -520,24 +520,23 @@ class Solution:
             if len(layer) > 0: path.append(layer)
         return path
 
-    #另一种解法:使用递归:
+    # 另一种解法:使用递归:
     # 主要思想：先预先给每个层都保存一个[]在path中，然后按照顺序插入，比如第一层的第一个节点的孩子节点是在第二个节点的孩子节点前面插入
-    def Print3(self,pRoot):
+    def Print3(self, pRoot):
         path = []
-        self.Printlayer(pRoot,1,path)
+        self.Printlayer(pRoot, 1, path)
         return path
 
-    def Printlayer(self,root,depth,arraylist):
+    def Printlayer(self, root, depth, arraylist):
         if root == None: return
         if depth > len(arraylist): arraylist.append([])
-        arraylist[depth-1].append(root.val)
-        self.Printlayer(root.left,depth+1,arraylist)
-        self.Printlayer(root.right,depth+1,arraylist)
+        arraylist[depth - 1].append(root.val)
+        self.Printlayer(root.left, depth + 1, arraylist)
+        self.Printlayer(root.right, depth + 1, arraylist)
 
-
-    #序列化二叉树
+    # 序列化二叉树
     def Serialize(self, root):
-        def doit(s,node):
+        def doit(s, node):
             if node is None:
                 s.append('#')
             else:
@@ -546,27 +545,25 @@ class Solution:
                 doit(s, node.right)
 
         s = []
-        doit(s,root)
+        doit(s, root)
         return ' '.join(s)
 
-#用的迭代器实现的:
+    # 用的迭代器实现的:
     def Deserialize(self, s):
         def doit():
             val = next(vals)
-            if val=='#': return None
+            if val == '#': return None
             node = TreeLinkNode(int(val))
             node.left = doit()
             node.right = doit()
             return node
 
-
         vals = iter(s.split())
         return doit()
 
-
-#二叉搜索树的第k个节点
-# 给定一棵二叉搜索树，请找出其中的第k小的结点。例如， （5，3，7，2，4，6，8）    中，按结点数值大小顺序第三小结点的值为4。
-    #思想：通过中序列遍历可以获得排序的节点
+    # 二叉搜索树的第k个节点
+    # 给定一棵二叉搜索树，请找出其中的第k小的结点。例如， （5，3，7，2，4，6，8）    中，按结点数值大小顺序第三小结点的值为4。
+    # 思想：通过中序列遍历可以获得排序的节点
     def KthNode(self, pRoot, k):
         def doit(node):
             if len(nodels) >= k: return nodels
@@ -583,48 +580,49 @@ class Solution:
         if k > len(nodels): return None
         return nodels[k - 1]
 
-#解法2:借助中序遍历的过程：其中语句:if node:return 如果index已经达到了k，
-#那么会被逐级返回，且通过if self.index == k返回第k个非None节点。如果还没到达k,则返回的都是None
+    # 解法2:借助中序遍历的过程：其中语句:if node:return 如果index已经达到了k，
+    # 那么会被逐级返回，且通过if self.index == k返回第k个非None节点。如果还没到达k,则返回的都是None
     index = 0
-    def KthNode2(self,pRoot,k):
+
+    def KthNode2(self, pRoot, k):
         if pRoot is None: return None
-        node = self.KthNode2(pRoot.left,k)
+        node = self.KthNode2(pRoot.left, k)
         if node: return node
         self.index += 1
         if self.index == k:
             return pRoot
         node = self.KthNode2(pRoot.right, k)
-        if node:return node
+        if node: return node
         return None
 
-#数据流中的中位数:总结:像这种数据流的一般都用队列等数据结构，使得能够直接获取到输出结果
+    # 数据流中的中位数:总结:像这种数据流的一般都用队列等数据结构，使得能够直接获取到输出结果
 
     def __init__(self):
         self.minheap = []
         self.maxheap = []
 
     def Insert(self, num):
-        if len(self.minheap) == 0 or num <= -self.minheap[0]: hp.heappush(self.minheap,-num)
-        else: hp.heappush(self.maxheap,num)
-        if len(self.minheap) == len(self.maxheap) + 2: hp.heappush(self.maxheap,-(hp.heappop(self.minheap)))
-        if len(self.minheap) == len(self.maxheap) - 1: hp.heappush(self.minheap,-(hp.heappop(self.maxheap)))
+        if len(self.minheap) == 0 or num <= -self.minheap[0]:
+            hp.heappush(self.minheap, -num)
+        else:
+            hp.heappush(self.maxheap, num)
+        if len(self.minheap) == len(self.maxheap) + 2: hp.heappush(self.maxheap, -(hp.heappop(self.minheap)))
+        if len(self.minheap) == len(self.maxheap) - 1: hp.heappush(self.minheap, -(hp.heappop(self.maxheap)))
         # print("="*20)
         # print(self.minheap)
         # print(self.maxheap)
 
-    def GetMedian(self,n=None):#这个地方得添加一个n=None，才能通过，不然会提示：多给了一个参数
+    def GetMedian(self, n=None):  # 这个地方得添加一个n=None，才能通过，不然会提示：多给了一个参数
         if len(self.minheap) == len(self.maxheap):
-            return (-self.minheap[0] + self.maxheap[0])/2.0  #特别注意，这个地方一定要将数据类型转换为float类型，不然在牛客网上面会一直有数据类型的错误
+            return (-self.minheap[0] + self.maxheap[0]) / 2.0  # 特别注意，这个地方一定要将数据类型转换为float类型，不然在牛客网上面会一直有数据类型的错误
         else:
             return -self.minheap[0]
 
-
-
-    #滑动窗口的最大值
-#解法1:设置一个maxPoint指向当前最大值的index,如果过期了，就重新再寻找
+    # 滑动窗口的最大值
+    # 解法1:设置一个maxPoint指向当前最大值的index,如果过期了，就重新再寻找
     def maxInWindows(self, num, size):
-        if num is None or size <= 0 or len(num) < size: return []   #需要注意的是当数组长度小于size的时候，需要返回[]
-        if len(num) == size: return [max(num)]  #这个地方需要返回list
+        if num is None or size <= 0 or len(num) < size: return []  # 需要注意的是当数组长度小于size的时候，需要返回[]
+        if len(num) == size: return [max(num)]  # 这个地方需要返回list
         maxPoint = num.index(max(num[:size]))
         arrayindex = [maxPoint]
         for i in range(size, len(num)):
@@ -635,74 +633,107 @@ class Solution:
             arrayindex.append(maxPoint)
         return list(map(lambda x: num[x], arrayindex))
 
-#解法2:设置一个队列，每次一个元素在入队列之前，都会检查队列的第一个元素是否已经超过了窗口，如果超过，则删除
-    #然后再将队列中所有小于当前元素的元素都删除掉，最后将当前元素放入队列，队列的第一个元素就是当前窗口的最大值
-    #运行的时候这个解法的时间和空间效率都没有上一个解法好。。。。。
-    def maxInWindows2(self,num,size):
+    # 解法2:设置一个队列，每次一个元素在入队列之前，都会检查队列的第一个元素是否已经超过了窗口，如果超过，则删除
+    # 然后再将队列中所有小于当前元素的元素都删除掉，最后将当前元素放入队列，队列的第一个元素就是当前窗口的最大值
+    # 运行的时候这个解法的时间和空间效率都没有上一个解法好。。。。。
+    def maxInWindows2(self, num, size):
         arrayindex = None
         maxnum = []
         for i in range(len(num)):
             if arrayindex is not None and len(arrayindex) > 0:
-               if i - arrayindex[0] >= size: arrayindex.remove(arrayindex[0])
+                if i - arrayindex[0] >= size: arrayindex.remove(arrayindex[0])
 
             if arrayindex is not None and len(arrayindex) > 0:
-               if num[i] > num[arrayindex[len(arrayindex)-1]]:
-                  j = 0
-                  while arrayindex and j < len(arrayindex):
-                      if num[i] > num[arrayindex[j]]:
-                          arrayindex.remove(arrayindex[j])
-                      else:
-                          j += 1
-            else: arrayindex = []
+                if num[i] > num[arrayindex[len(arrayindex) - 1]]:
+                    j = 0
+                    while arrayindex and j < len(arrayindex):
+                        if num[i] > num[arrayindex[j]]:
+                            arrayindex.remove(arrayindex[j])
+                        else:
+                            j += 1
+            else:
+                arrayindex = []
             arrayindex.append(i)
-            if i >=size-1: maxnum.append(num[arrayindex[0]])
+            if i >= size - 1: maxnum.append(num[arrayindex[0]])
         return maxnum
 
+    # 矩阵中的路径
+    # 解法：使用dfs来解决
+    def hasPath(self, matrix, rows, cols, path):
+        visit = [False] * (rows * cols)
+        for i in range(rows):
+            for j in range(cols):
+                if self.dfs(matrix=matrix, rows=rows, cols=cols, i=i, j=j, path=path, k=0, visit=visit):
+                    return True
+        return False
+
+    def dfs(self, matrix, rows, cols, i, j, path, k, visit):
+        index = i * cols + j
+        if i >= 0 and i < rows and j >= 0 and j < cols:
+            if visit[index] == False and path[k] == matrix[index]:
+                k += 1
+                if k == len(path):
+                    return True
+                visit[index] = True
+                if self.dfs(matrix, rows, cols, i + 1, j, path, k, visit) or \
+                        self.dfs(matrix, rows, cols, i - 1, j, path, k, visit) or \
+                        self.dfs(matrix, rows, cols, i, j + 1, path, k, visit) or \
+                        self.dfs(matrix, rows, cols, i, j - 1, path, k, visit):
+                    return True
+                visit[index] = False
+        return False
+
+    # 机器人的运动范围
+    c = 0
+
+    def movingCount(self, threshold, rows, cols):
+        visit = [False] * (rows * cols)
+        self.travel(threshold, rows, cols, 0, 0, visit)
+        return self.c
+
+    def travel(self, threshold, rows, cols, i, j, visit):
+        index = i * cols + j
+        if i == rows or j == cols or i == -1 or j == -1 or visit[index] == True:
+            return visit
+
+        if self.sum(str(i) + str(j)) <= threshold:
+            self.c += 1
+        else:
+            return visit  # 如果这个方向已经达到阈值，则这个方向就终止了
+        visit[index] = True
+        visit = self.travel(threshold, rows, cols, i, j - 1, visit)
+        visit = self.travel(threshold, rows, cols, i, j + 1, visit)
+        visit = self.travel(threshold, rows, cols, i + 1, j, visit)
+        visit = self.travel(threshold, rows, cols, i - 1, j, visit)
+        return visit
+
+    def sum(self, i):
+        str1 = str(i)
+        sum = 0
+        for s in str1:
+            sum += int(s)
+        return sum
+
+    # 顺时针打印矩阵
+
+    def printMatrix(self, matrix):
+         if matrix:
+            return list(matrix.pop(0)) + self.printMatrix(list(zip(*matrix))[::-1])
+         return []
+
+    #把数组排成最小的数
+    def PrintMinNumber(self, numbers):
+        for i in range(len(numbers)):
+            for j in range(i,len(numbers)):
+                if not self.compareTo(numbers[i],numbers[j]):
+                   numbers[i],numbers[j] = numbers[j],numbers[i]
+        return ''.join(map(lambda x:str(x),numbers))
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    def compareTo(self,s1,s2):
+        str1 = str(s1) + str(s2)
+        str2 = str(s2) + str(s1)
+        return str1 < str2
 
 
 
@@ -751,8 +782,11 @@ right.right = right2
 # s.Insert(6)
 # print(s.GetMedian())
 
+# matrix = ['a','b','c','e','s','f','c','s','a','d','e','e']
+# path='bcced'
+# print(s.hasPath(matrix=matrix,rows=3,cols=4,path=path))
 
-print(s.maxInWindows2([2,3,4,2,3,1,6],1))
 
+print(s.PrintMinNumber([3,32,321]))
 
-
+# print(s.xzmatrix([[5, 6, 7, 8], [9, 10, 11, 12], [13, 14, 15, 16]]))
