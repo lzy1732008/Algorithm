@@ -70,7 +70,7 @@ class Solution:
         return 0
 
     def PrintMinNumber(self, numbers):
-        numbers = sorted(numbers, key=cmp_to_key(self.cmp))
+        numbers = sorted(numbers, key=cmp_to_key(self.z))
         return reduce(lambda x, y: str(x) + str(y), numbers)
 
     # 丑数
@@ -739,6 +739,11 @@ class Solution:
 
 
 
+
+
+
+
+
 s = Solution()
 root = TreeLinkNode(5)
 left = TreeLinkNode(3)
@@ -785,8 +790,5 @@ right.right = right2
 # matrix = ['a','b','c','e','s','f','c','s','a','d','e','e']
 # path='bcced'
 # print(s.hasPath(matrix=matrix,rows=3,cols=4,path=path))
-
-
-print(s.PrintMinNumber([3,32,321]))
 
 # print(s.xzmatrix([[5, 6, 7, 8], [9, 10, 11, 12], [13, 14, 15, 16]]))
